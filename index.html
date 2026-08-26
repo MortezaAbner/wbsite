@@ -1,61 +1,445 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وب‌سایت من</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Step-by-step, multilingual VPN setup guides for Android, iOS, Windows and more.">
+<title>UltimateGuide — Secure VPN setup guides</title>
+<script>
+  (function(){
+    var stored = localStorage.getItem('theme');
+    var theme = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+<style>
+  :root{ --radius:14px; --sky:#38bdf8; --purple:#7c3aed; --gradient: linear-gradient(135deg,#38bdf8 0%,#7c8cf8 45%,#a855f7 100%); }
+  :root[data-theme="light"]{
+    --bg-1:#eaf3ff; --bg-2:#f4eeff; --text:#1c1b2e; --muted:#5f5c7d; --border:rgba(124,58,237,.15);
+    --glass-bg:rgba(255,255,255,.55); --glass-border:rgba(124,58,237,.18); --glass-shadow:0 8px 24px rgba(80,60,180,.10);
+    --icon-color:#1c2a52; --header-bg:rgba(255,255,255,.55); --accent:#7c3aed;
+    --selected-text:#ffffff;
+  }
+  :root[data-theme="dark"]{
+    --bg-1:#0d1024; --bg-2:#160f2b; --text:#eef0fb; --muted:#a9a6cf; --border:rgba(168,133,255,.22);
+    --glass-bg:rgba(255,255,255,.06); --glass-border:rgba(168,133,255,.28); --glass-shadow:0 8px 30px rgba(0,0,0,.45);
+    --icon-color:#e4e6fb; --header-bg:rgba(20,16,40,.55); --accent:#a855f7;
+    --selected-text:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI","Vazirmatn","Tahoma",Arial,sans-serif; color:var(--text); line-height:1.6;
+    background:
+      radial-gradient(1100px 500px at 15% -10%, rgba(56,189,248,.28), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(168,85,247,.24), transparent 55%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    min-height:100vh; transition:background .3s ease, color .3s ease;
+  }
+  a{ color:inherit; text-decoration:none; }
+  .glass{ background:var(--glass-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: white;
-            text-align: center;
-        }
+  header{ display:flex; align-items:center; justify-content:space-between; padding:18px 40px; backdrop-filter:blur(12px); background:var(--header-bg); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+  .logo{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:1.2rem; letter-spacing:.2px; background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .logo svg{ width:20px; height:20px; -webkit-text-fill-color:initial; color:var(--purple); }
+  nav{ display:flex; align-items:center; gap:16px; }
+  nav a{ font-size:.95rem; color:var(--text); opacity:.85; }
+  nav a:hover{ opacity:1; }
+  .controls{ display:flex; align-items:center; gap:10px; }
+  .icon-btn{ width:40px; height:40px; border-radius:999px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text); transition:transform .15s ease; }
+  .icon-btn:hover{ transform:translateY(-2px); }
+  .icon-btn svg{ width:18px; height:18px; }
+  .lang-select{ position:relative; display:flex; align-items:center; gap:8px; font-size:.9rem; border-radius:999px; padding:8px 16px; cursor:pointer; }
+  .lang-select select{ border:none; background:transparent; color:var(--text); font-size:.9rem; font-family:inherit; cursor:pointer; outline:none; appearance:none; padding-inline-end:14px; }
+  .lang-select select option{ color:#111; }
+  .lang-select::after{ content:"▾"; font-size:.7rem; position:absolute; left:12px; pointer-events:none; color:var(--purple); }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 80px 20px;
-        }
+  .hero{ text-align:center; padding:110px 20px 70px; max-width:800px; margin:0 auto; }
+  .hero h1{ font-size:2.9rem; font-weight:800; line-height:1.25; margin-bottom:18px; background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p.subtitle{ color:var(--muted); font-size:1.2rem; margin-bottom:60px; }
+  .hero h2{ font-size:1.05rem; font-weight:700; color:var(--purple); margin-bottom:30px; letter-spacing:.2px; }
 
-        h1 {
-            font-size: 42px;
-        }
+  .os-grid{ display:flex; justify-content:center; flex-wrap:wrap; gap:18px; margin-bottom:20px; }
+  .os-card{ display:flex; flex-direction:column; align-items:center; gap:12px; width:118px; padding:22px 12px; border-radius:var(--radius); transition:box-shadow .2s ease, transform .2s ease, background .2s ease, color .2s ease; cursor:pointer; }
+  .os-card:hover{ transform:translateY(-4px); }
+  .os-card.selected{ background:var(--gradient); color:var(--selected-text); border-color:transparent; box-shadow:0 14px 30px rgba(124,58,237,.35); }
+  .os-icon{ width:44px; height:44px; display:flex; align-items:center; justify-content:center; color:var(--icon-color); transition:color .2s ease; }
+  .os-card.selected .os-icon{ color:var(--selected-text); }
+  .os-icon svg{ width:100%; height:100%; }
+  .os-card span{ font-size:.85rem; font-weight:600; color:inherit; }
 
-        p {
-            font-size: 20px;
-            line-height: 2;
-        }
+  .cta{ display:inline-block; padding:13px 34px; border-radius:999px; font-size:.95rem; font-weight:700; color:var(--text); margin-top:28px; transition:transform .15s ease; }
+  .cta:hover{ transform:translateY(-2px); }
 
-        .button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 30px;
-            background: #5865F2;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-        }
-    </style>
+  .change-row{ text-align:start; margin-bottom:10px; }
+  .change-link{ font-size:.85rem; color:var(--muted); cursor:pointer; }
+  .change-link:hover{ color:var(--purple); }
+
+  #appsSection{ display:none; max-width:800px; margin:0 auto 40px; text-align:start; }
+  #appsSection h2{ text-align:end; font-size:1.05rem; font-weight:700; color:var(--purple); margin-bottom:24px; }
+
+  .apps-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+  .app-card{ border-radius:var(--radius); padding:18px; display:flex; flex-direction:column; gap:14px; }
+  .app-card-top{ display:flex; align-items:flex-start; justify-content:space-between; }
+  .app-name{ font-weight:700; font-size:1.05rem; margin-bottom:4px; }
+  .app-os{ font-size:.72rem; color:var(--muted); letter-spacing:.4px; }
+  .app-icon{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--icon-color); flex-shrink:0; }
+  .app-icon svg{ width:18px; height:18px; }
+  .app-link{ display:flex; align-items:center; gap:6px; font-size:.85rem; color:var(--purple); }
+  .app-link svg{ width:14px; height:14px; }
+
+  /* ---- App detail page ---- */
+  .breadcrumb{ display:flex; align-items:center; gap:8px; font-size:.9rem; color:var(--muted); margin-bottom:22px; }
+  .breadcrumb a{ color:var(--muted); cursor:pointer; }
+  .breadcrumb a:hover{ color:var(--purple); }
+  .breadcrumb .crumb-current{ color:var(--text); font-weight:600; }
+
+  .detail-hero-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:24px; }
+  .detail-title-block h1{ font-size:2.1rem; font-weight:700; margin-bottom:6px; color:var(--text); }
+  .detail-os-row{ display:flex; align-items:center; gap:6px; color:var(--muted); font-size:.95rem; }
+  .detail-os-row svg{ width:16px; height:16px; }
+  .detail-icon-box{ width:56px; height:56px; border-radius:var(--radius); display:flex; align-items:center; justify-content:center; color:var(--icon-color); flex-shrink:0; }
+  .detail-icon-box svg{ width:26px; height:26px; }
+
+  .download-btn{ display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:999px; border:1px solid var(--border); font-size:.9rem; font-weight:700; color:var(--text); margin-bottom:44px; cursor:pointer; transition:transform .15s ease; }
+  .download-btn:hover{ transform:translateY(-2px); }
+  .download-btn svg{ width:16px; height:16px; }
+
+  .guides-heading{ font-size:1.05rem; font-weight:700; color:var(--purple); margin-bottom:20px; }
+
+  .guides-list{ display:flex; flex-direction:column; gap:14px; }
+  .guide-card{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:18px 22px; border-radius:var(--radius); cursor:pointer; transition:transform .2s ease; }
+  .guide-card:hover{ transform:translateY(-3px); }
+  .guide-card.ping{ border-left:3px solid #22c55e; }
+  .guide-card.update{ border-left:3px solid #f59e0b; }
+  .guide-card.setup{ border-left:3px solid #3b82f6; }
+  .guide-chevron{ width:32px; height:32px; border-radius:999px; background:var(--glass-bg); display:flex; align-items:center; justify-content:center; color:var(--muted); flex-shrink:0; }
+  .guide-chevron svg{ width:14px; height:14px; }
+  .guide-label{ flex:1; font-weight:700; font-size:1rem; }
+  .guide-icon{ width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--icon-color); flex-shrink:0; }
+  .guide-icon svg{ width:18px; height:18px; }
+
+  #appDetailSection{ display:none; max-width:800px; margin:0 auto 40px; text-align:start; }
+
+  @media (max-width:640px){
+    header{ padding:14px 18px; flex-wrap:wrap; gap:12px; }
+    nav{ gap:16px; flex-wrap:wrap; }
+    .hero{ padding:64px 16px 44px; }
+    .hero h1{ font-size:2rem; }
+    .detail-title-block h1{ font-size:1.6rem; }
+  }
+</style>
 </head>
-
 <body>
 
-    <div class="container">
-
-        <h1>به سایت من خوش آمدید</h1>
-
-        <p>
-            این اولین وب‌سایت من است که به صورت رایگان آنلاین شده است.
-        </p>
-
-        <a class="button" href="https://t.me/" target="_blank">
-            ارتباط با من
-        </a>
-
+<header>
+  <div class="logo">
+    UltimateGuide
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5l-8-3z"/></svg>
+  </div>
+  <nav>
+    <a href="#" data-i18n="nav_guides">راهنماها</a>
+    <a href="#" data-i18n="nav_faq">سوالات متداول</a>
+    <a href="#" data-i18n="nav_about">درباره ما</a>
+    <div class="controls">
+      <button class="icon-btn glass" id="themeToggle" aria-label="تغییر حالت روشن/تیره" title="تغییر حالت روشن/تیره">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+      </button>
+      <div class="lang-select glass">
+        <select id="langSwitcher">
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+          <option value="fa" selected>فارسی</option>
+        </select>
+      </div>
     </div>
+  </nav>
+</header>
+
+<main class="hero">
+<div id="homeContent">
+  <h1 data-i18n="hero_title">در چند دقیقه VPN خود را راه‌اندازی کنید</h1>
+  <p class="subtitle" data-i18n="hero_subtitle">راهنماهای گام‌به‌گام و بدون اصطلاحات پیچیده.</p>
+
+  <h2 data-i18n="os_heading">سیستم‌عامل خود را انتخاب کنید</h2>
+  <div class="os-grid" id="osGrid">
+    <div class="os-card glass" data-os="android">
+      <div class="os-icon"><svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="16" x2="23" y2="4" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        <line x1="70" y1="16" x2="77" y2="4" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        <path d="M20 45a30 30 0 0 1 60 0z"/><rect x="20" y="45" width="60" height="30"/>
+        <rect x="9" y="45" width="11" height="26" rx="5.5"/><rect x="80" y="45" width="11" height="26" rx="5.5"/>
+        <rect x="29" y="75" width="11" height="21" rx="5.5"/><rect x="60" y="75" width="11" height="21" rx="5.5"/>
+        <circle cx="38" cy="34" r="4" fill="#fff"/><circle cx="62" cy="34" r="4" fill="#fff"/></svg></div>
+      <span>Android</span>
+    </div>
+    <div class="os-card glass" data-os="windows">
+      <div class="os-icon"><svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="39" height="39"/><rect x="53" y="8" width="39" height="39"/>
+        <rect x="8" y="53" width="39" height="39"/><rect x="53" y="53" width="39" height="39"/></svg></div>
+      <span>Windows</span>
+    </div>
+    <div class="os-card glass" data-os="macos">
+      <div class="os-icon"><svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M53 28c-2-7-9-12-17-11 0 8 6 15 14 15h1c1 0 2-2 2-4z"/>
+        <path d="M67 34c-7 0-11 4-16 4s-8-4-15-4c-10 0-19 9-19 24 0 17 12 32 18 32 4 0 6-3 12-3s7 3 12 3c8 0 19-16 19-29 0-2 0-4-1-7-5-2-8-5-10-10 2-6 5-8 5-8s-2-2-5-2z"/></svg></div>
+      <span>macOS</span>
+    </div>
+    <div class="os-card glass" data-os="linux">
+      <div class="os-icon"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="22" r="16" fill="currentColor"/><ellipse cx="50" cy="58" rx="27" ry="34" fill="currentColor"/>
+        <ellipse cx="42" cy="60" rx="9" ry="15" fill="#fff"/><ellipse cx="58" cy="60" rx="9" ry="15" fill="#fff"/>
+        <circle cx="44" cy="20" r="3" fill="#fff"/><circle cx="56" cy="20" r="3" fill="#fff"/>
+        <path d="M46 27l4 6 4-6z" fill="#e58a2a"/><path d="M34 90l11-9 8 9z" fill="#e58a2a"/>
+        <path d="M66 90l-11-9-8 9z" fill="#e58a2a"/></svg></div>
+      <span>Linux</span>
+    </div>
+    <div class="os-card glass" data-os="ios">
+      <div class="os-icon"><svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M53 28c-2-7-9-12-17-11 0 8 6 15 14 15h1c1 0 2-2 2-4z"/>
+        <path d="M67 34c-7 0-11 4-16 4s-8-4-15-4c-10 0-19 9-19 24 0 17 12 32 18 32 4 0 6-3 12-3s7 3 12 3c8 0 19-16 19-29 0-2 0-4-1-7-5-2-8-5-10-10 2-6 5-8 5-8s-2-2-5-2z"/></svg></div>
+      <span>iOS</span>
+    </div>
+  </div>
+
+  <div id="appsSection">
+    <div class="change-row"><span class="change-link" id="changeLink" data-i18n="change_label">تغییر</span></div>
+    <h2 id="appsHeading"></h2>
+    <div class="apps-grid" id="appsGrid"></div>
+  </div>
+
+  <a href="#" class="cta glass" data-i18n="cta">مشاهده همه راهنماها</a>
+</div>
+
+<div id="appDetailSection">
+  <div class="breadcrumb">
+    <a href="#" id="breadcrumbGuides" data-i18n="nav_guides">راهنماها</a>
+    <span>/</span>
+    <span class="crumb-current" id="breadcrumbCurrent">Happ</span>
+  </div>
+
+  <div class="detail-hero-top">
+    <div class="detail-icon-box glass" id="detailIconBox"></div>
+    <div class="detail-title-block">
+      <h1 id="detailAppName">Happ</h1>
+      <div class="detail-os-row">
+        <span id="detailOsName">iOS</span>
+        <span id="detailOsIcon"></span>
+      </div>
+    </div>
+  </div>
+
+  <a href="#" class="download-btn glass" id="downloadBtn" target="_blank" rel="noopener">
+    <span id="downloadBtnLabel">دانلود از اپ استور</span>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="downloadBtnIcon"></svg>
+  </a>
+
+  <h2 class="guides-heading" data-i18n="nav_guides">راهنماها</h2>
+  <div class="guides-list" id="guidesList"></div>
+</div>
+</main>
+
+<script>
+  const translations = {
+    en: { dir:"ltr", nav_guides:"Guides", nav_faq:"FAQ", nav_about:"About",
+      hero_title:"Set up your VPN in minutes", hero_subtitle:"Step-by-step, no-jargon guides.",
+      os_heading:"Choose your operating system", cta:"Browse all guides",
+      change_label:"Change", choose_app:"Choose an app for {os}", view_guides:"View guides",
+      download_prefix:"Download from", guide_ping:"Ping Test", guide_update:"Update", guide_setup:"Setup" },
+    fa: { dir:"rtl", nav_guides:"راهنماها", nav_faq:"سوالات متداول", nav_about:"درباره ما",
+      hero_title:"در چند دقیقه VPN خود را راه‌اندازی کنید", hero_subtitle:"راهنماهای گام‌به‌گام و بدون اصطلاحات پیچیده.",
+      os_heading:"سیستم‌عامل خود را انتخاب کنید", cta:"مشاهده همه راهنماها",
+      change_label:"تغییر", choose_app:"یک برنامه برای {os} انتخاب کنید", view_guides:"مشاهده راهنماها",
+      download_prefix:"دانلود از", guide_ping:"پینگ گرفتن", guide_update:"به‌روزرسانی", guide_setup:"راه‌اندازی" },
+    ru: { dir:"ltr", nav_guides:"Гайды", nav_faq:"Вопросы", nav_about:"О нас",
+      hero_title:"Настройте VPN за несколько минут", hero_subtitle:"Пошаговые инструкции без сложных терминов.",
+      os_heading:"Выберите операционную систему", cta:"Смотреть все гайды",
+      change_label:"Изменить", choose_app:"Выберите приложение для {os}", view_guides:"Смотреть гайды",
+      download_prefix:"Скачать из", guide_ping:"Пинг-тест", guide_update:"Обновление", guide_setup:"Установка" }
+  };
+
+  const osDisplayNames = { android:"Android", windows:"Windows", macos:"macOS", linux:"Linux", ios:"iOS" };
+
+  const storeNames = {
+    ios:{ en:"the App Store", fa:"اپ استور", ru:"App Store" },
+    android:{ en:"Google Play", fa:"گوگل پلی", ru:"Google Play" },
+    windows:{ en:"Microsoft Store", fa:"مایکروسافت استور", ru:"Microsoft Store" },
+    macos:{ en:"the App Store", fa:"اپ استور", ru:"App Store" },
+    linux:{ en:"the official site", fa:"وبسایت رسمی", ru:"официального сайта" }
+  };
+
+  const storeIcons = {
+    apple:'<path d="M16.7 12.7c0-2.8 2.3-4.1 2.4-4.2-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.3 1-4.2 1-.9 0-2.2-1-3.7-1-1.9 0-3.7 1.1-4.6 2.8-2 3.5-.5 8.6 1.4 11.4.9 1.4 2 2.9 3.5 2.8 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.6.9c1.5 0 2.5-1.4 3.4-2.7.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.7-1-2.7-4.1zM14.1 4.9c.7-.9 1.2-2.1 1.1-3.4-1.1.1-2.4.7-3.1 1.6-.7.8-1.3 2.1-1.1 3.3 1.2.1 2.4-.6 3.1-1.5z" fill="currentColor"/>',
+    generic:'<path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+  };
+
+  /* Only the Happ / iOS App Store link is a real, verified URL.
+     The rest are left as "#" placeholders until real links are provided. */
+  const downloadLinks = {
+    ios:     { Happ:"https://apps.apple.com/us/app/happ-proxy-utility/id6504287215", Streisand:"#" },
+    android: { Happ:"#", v2rayNG:"#" },
+    windows: { Happ:"#", v2rayN:"#" },
+    macos:   { Happ:"#", FoXray:"#" },
+    linux:   { Happ:"#", NekoRay:"#" }
+  };
+
+  const guideIcons = {
+    ping:   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    update: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="18" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="7" cy="8" r="1" fill="currentColor"/><circle cx="7" cy="16" r="1" fill="currentColor"/></svg>',
+    setup:  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c3 2 5 6 5 10 0 3-1 6-3 8l-2-3-2 3c-2-2-3-5-3-8 0-4 2-8 5-10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
+  };
+  const guidesOrder = ['ping','update','setup'];
+
+  let currentApp = null;
+  let currentAppOs = null;
+
+  const appIcons = {
+    plane: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 11l18-8-8 18-2-8-8-2z" fill="currentColor"/></svg>',
+    monitor: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  };
+
+  const appsData = {
+    android: [ {name:"Happ", icon:"monitor"}, {name:"v2rayNG", icon:"plane"} ],
+    windows: [ {name:"Happ", icon:"monitor"}, {name:"v2rayN", icon:"plane"} ],
+    macos:   [ {name:"Happ", icon:"monitor"}, {name:"FoXray", icon:"plane"} ],
+    linux:   [ {name:"Happ", icon:"monitor"}, {name:"NekoRay", icon:"plane"} ],
+    ios:     [ {name:"Streisand", icon:"plane"}, {name:"Happ", icon:"monitor"} ]
+  };
+
+  let currentLang = 'fa';
+  let selectedOS = null;
+
+  function setLanguage(lang){
+    const t = translations[lang];
+    if(!t) return;
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      const key = el.getAttribute('data-i18n');
+      if(t[key] !== undefined) el.textContent = t[key];
+    });
+    renderApps();
+    if(currentApp) renderAppDetail();
+  }
+  document.getElementById('langSwitcher').addEventListener('change', function(e){
+    setLanguage(e.target.value);
+  });
+
+  function renderApps(){
+    const section = document.getElementById('appsSection');
+    if(!selectedOS){ section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    const t = translations[currentLang];
+    document.getElementById('changeLink').textContent = t.change_label;
+    document.getElementById('appsHeading').textContent = t.choose_app.replace('{os}', selectedOS.toUpperCase());
+    const grid = document.getElementById('appsGrid');
+    grid.innerHTML = '';
+    appsData[selectedOS].forEach(function(app){
+      const card = document.createElement('div');
+      card.className = 'app-card glass';
+      card.innerHTML =
+        '<div class="app-card-top">' +
+          '<div><div class="app-name">' + app.name + '</div><div class="app-os">' + selectedOS.toUpperCase() + '</div></div>' +
+          '<div class="app-icon">' + appIcons[app.icon] + '</div>' +
+        '</div>' +
+        '<a href="#" class="app-link">' + appIcons[app.icon] + '<span>' + t.view_guides + '</span></a>';
+      card.addEventListener('click', function(e){
+        e.preventDefault();
+        openAppDetail(app.name, selectedOS);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---- App detail page ---- */
+  function openAppDetail(appName, os){
+    currentApp = appName;
+    currentAppOs = os;
+    document.getElementById('homeContent').style.display = 'none';
+    document.getElementById('appDetailSection').style.display = 'block';
+    renderAppDetail();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  function closeAppDetail(){
+    currentApp = null;
+    currentAppOs = null;
+    document.getElementById('appDetailSection').style.display = 'none';
+    document.getElementById('homeContent').style.display = 'block';
+  }
+
+  function renderAppDetail(){
+    if(!currentApp) return;
+    const t = translations[currentLang];
+
+    document.getElementById('breadcrumbCurrent').textContent = currentApp;
+    document.getElementById('detailAppName').textContent = currentApp;
+    document.getElementById('detailOsName').textContent = osDisplayNames[currentAppOs] || currentAppOs;
+
+    const osIconSrc = document.querySelector('.os-card[data-os="' + currentAppOs + '"] .os-icon svg');
+    document.getElementById('detailOsIcon').innerHTML = osIconSrc ? osIconSrc.outerHTML : '';
+
+    const appEntry = (appsData[currentAppOs] || []).find(function(a){ return a.name === currentApp; });
+    document.getElementById('detailIconBox').innerHTML = appIcons[appEntry ? appEntry.icon : 'monitor'];
+
+    const link = (downloadLinks[currentAppOs] && downloadLinks[currentAppOs][currentApp]) || '#';
+    document.getElementById('downloadBtn').setAttribute('href', link);
+    const storeName = storeNames[currentAppOs] ? storeNames[currentAppOs][currentLang] : '';
+    document.getElementById('downloadBtnLabel').textContent = t.download_prefix + ' ' + storeName;
+    document.getElementById('downloadBtnIcon').innerHTML = (currentAppOs === 'ios' || currentAppOs === 'macos') ? storeIcons.apple : storeIcons.generic;
+
+    const list = document.getElementById('guidesList');
+    list.innerHTML = '';
+    guidesOrder.forEach(function(key){
+      const card = document.createElement('div');
+      card.className = 'guide-card glass ' + key;
+      card.innerHTML =
+        '<div class="guide-icon">' + guideIcons[key] + '</div>' +
+        '<span class="guide-label">' + t['guide_' + key] + '</span>' +
+        '<div class="guide-chevron"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+      list.appendChild(card);
+    });
+  }
+
+  document.getElementById('breadcrumbGuides').addEventListener('click', function(e){
+    e.preventDefault();
+    closeAppDetail();
+  });
+
+  document.getElementById('changeLink').addEventListener('click', function(){
+    selectedOS = null;
+    document.querySelectorAll('.os-card').forEach(function(c){ c.classList.remove('selected'); });
+    renderApps();
+  });
+
+  document.querySelectorAll('.os-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      selectedOS = this.getAttribute('data-os');
+      document.querySelectorAll('.os-card').forEach(function(c){ c.classList.remove('selected'); });
+      this.classList.add('selected');
+      renderApps();
+    });
+  });
+
+  /* ---- theme (dark/light) ---- */
+  const moonIcon = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4 7 7 0 0 0 20 14.5z" fill="currentColor"/>';
+  const sunIcon = '<circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2 5.6 5.6"/></g>';
+  const themeIconEl = document.getElementById('themeIcon');
+  const themeToggleBtn = document.getElementById('themeToggle');
+  function paintIcon(theme){ themeIconEl.innerHTML = theme === 'dark' ? sunIcon : moonIcon; }
+  function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme); paintIcon(theme); }
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  themeToggleBtn.addEventListener('click', function(){
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+    if(!localStorage.getItem('theme')){ applyTheme(e.matches ? 'dark' : 'light'); }
+  });
+</script>
 
 </body>
 </html>
