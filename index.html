@@ -1,539 +1,766 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" class="dark">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>مرتضی آبنر | Morteza Abner</title>
   
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- Google Fonts: Vazirmatn -->
+  <!-- فونت وزیرمتن -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Vazirmatn', 'sans-serif'],
-          },
-          colors: {
-            phosphor: '#39ff14',
-            'phosphor-glow': '#22c55e',
-            'sky-glow': '#38bdf8',
-            'dark-base': '#080e1a',
-            'dark-surface': '#0c162d',
-          }
-        }
-      }
-    }
-  </script>
+  <!-- FontAwesome برای آیکون‌ها -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- کتابخانه تولید خودکار QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+    :root {
+      --primary-sky: #38bdf8;
+      --primary-neon: #39ff14;
+      --neon-glow: rgba(57, 255, 20, 0.45);
+      --sky-glow: rgba(56, 189, 248, 0.4);
+      --font-main: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* استایل‌های شیشه‌ای (Glassmorphism) */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.7);
+    /* حالت دارک (پیش‌فرض) */
+    body[data-theme="dark"] {
+      --bg-gradient: radial-gradient(circle at 15% 20%, #031326 0%, #050b14 50%, #020617 100%);
+      --glass-bg: rgba(15, 23, 42, 0.65);
+      --glass-border: rgba(56, 189, 248, 0.22);
+      --glass-hover-border: rgba(57, 255, 20, 0.55);
+      --card-bg: rgba(30, 41, 59, 0.45);
+      --card-hover: rgba(30, 41, 59, 0.75);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --icon-box-bg: rgba(15, 23, 42, 0.85);
+      --badge-bg: rgba(56, 189, 248, 0.15);
+      --badge-text: #38bdf8;
+      --modal-bg: rgba(11, 19, 36, 0.95);
+      --orb-opacity: 0.28;
+    }
+
+    /* حالت لایت */
+    body[data-theme="light"] {
+      --bg-gradient: radial-gradient(circle at 20% 20%, #e0f2fe 0%, #f0fdf4 45%, #f8fafc 100%);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(56, 189, 248, 0.4);
+      --glass-hover-border: rgba(34, 197, 94, 0.65);
+      --card-bg: rgba(255, 255, 255, 0.82);
+      --card-hover: rgba(255, 255, 255, 0.96);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --icon-box-bg: #ffffff;
+      --badge-bg: rgba(2, 132, 199, 0.12);
+      --badge-text: #0284c7;
+      --modal-bg: rgba(255, 255, 255, 0.98);
+      --orb-opacity: 0.18;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px 16px 80px 16px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* پس‌زمینه نوری شیشه‌ای (Ambient Orbs) */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(95px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--orb-opacity);
+      transition: opacity 0.5s ease;
+    }
+    .orb-1 {
+      width: 320px;
+      height: 320px;
+      background: var(--primary-sky);
+      top: -60px;
+      right: -80px;
+      animation: float 9s infinite alternate ease-in-out;
+    }
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--primary-neon);
+      bottom: 40px;
+      left: -90px;
+      animation: float 11s infinite alternate-reverse ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 35px) scale(1.1); }
+    }
+
+    /* کانتینر اصلی اپلیکیشن */
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* نوار ابزار بالا (تم، اشتراک‌گذاری، بارکد) */
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--glass-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.07);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 10px 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     }
-    .dark .glass-card {
-      background: rgba(12, 22, 45, 0.65);
-      border: 1px solid rgba(56, 189, 248, 0.15);
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    .top-action-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    .glass-btn {
-      background: rgba(255, 255, 255, 0.55);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    .action-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
-    .dark .glass-btn {
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid rgba(56, 189, 248, 0.18);
-    }
-    .glass-btn:hover {
-      border-color: #38bdf8;
-      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.25), 0 0 15px rgba(57, 255, 20, 0.15);
+    .action-btn:hover {
+      border-color: var(--primary-neon);
+      box-shadow: 0 0 14px var(--neon-glow);
       transform: translateY(-2px);
     }
-    .dark .glass-btn:hover {
-      border-color: #39ff14;
-      box-shadow: 0 10px 30px -5px rgba(56, 189, 248, 0.2), 0 0 25px rgba(57, 255, 20, 0.25);
+
+    /* کارت پروفایل */
+    .profile-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: 26px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-sky), var(--primary-neon));
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 16px auto;
+    }
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid transparent;
+      background: linear-gradient(135deg, var(--primary-sky), var(--primary-neon)) border-box;
+      box-shadow: 0 0 24px var(--sky-glow);
+    }
+    .verified-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      background: #0284c7;
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--modal-bg);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .profile-name {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .profile-bio {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 410px;
+      margin: 0 auto;
+      font-weight: 400;
     }
 
-    /* جلوه‌های نوری نئونی */
-    .neon-avatar-glow {
-      box-shadow: 0 0 35px -5px rgba(56, 189, 248, 0.5), 0 0 20px -3px rgba(57, 255, 20, 0.4);
+    /* فهرست دکمه‌های پیوند */
+    .links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
     }
-    .neon-gradient-title {
-      background: linear-gradient(135deg, #0284c7 0%, #059669 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .link-item {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--text-main);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
     }
-    .dark .neon-gradient-title {
-      background: linear-gradient(135deg, #38bdf8 0%, #39ff14 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .link-item:hover, .link-item:focus {
+      background: var(--card-hover);
+      border-color: var(--primary-neon);
+      transform: translateY(-3px) scale(1.012);
+      box-shadow: 0 10px 24px var(--neon-glow);
+    }
+    .link-item:active {
+      transform: scale(0.985);
     }
 
-    /* انیمیشن اورب‌های پس‌زمینه */
-    @keyframes orb-float {
-      0%, 100% { transform: translate(0px, 0px) scale(1); }
-      50% { transform: translate(25px, -20px) scale(1.08); }
+    .link-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
-    .animate-orb-slow {
-      animation: orb-float 10s ease-in-out infinite;
-    }
-    .animate-orb-reverse {
-      animation: orb-float 12s ease-in-out infinite reverse;
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
-    /* استایل‌های اختصاصی تلویزیون‌های هوشمند */
-    @media (min-width: 1920px) and (min-height: 1080px) {
-      .tv-scale {
-        zoom: 1.15;
-      }
-      .glass-btn:focus {
-        outline: 4px solid #39ff14;
-        box-shadow: 0 0 30px #39ff14;
-        transform: scale(1.03);
-      }
+    /* رنگ‌های اختصاصی آیکون‌ها */
+    .icon-website { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+    .icon-instagram { background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888); }
+    .icon-youtube { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .icon-telegram { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+    .icon-threads { background: #000000; color: #ffffff; }
+    .icon-x { background: #0f172a; color: #ffffff; }
+    .icon-pinterest { background: linear-gradient(135deg, #e60023, #bd081c); }
+    .icon-github { background: linear-gradient(135deg, #24292e, #181717); }
+
+    .link-details {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+    .link-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .link-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 400;
+    }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge-status {
+      font-size: 0.76rem;
+      padding: 3px 9px;
+      border-radius: 12px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-weight: 600;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .arrow-icon {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+    .link-item:hover .arrow-icon {
+      transform: translateX(-4px);
+      color: var(--primary-neon);
+    }
+
+    /* فوتر */
+    .page-footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+    .page-footer a {
+      color: var(--primary-sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* پنجره مودال بارکد QR */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .qr-modal-content {
+      background: var(--modal-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 26px;
+      padding: 26px 22px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .modal-overlay.active .qr-modal-content {
+      transform: scale(1);
+    }
+    .qr-box {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 18px;
+      display: inline-block;
+      margin: 18px 0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+    .close-modal-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 10px 22px;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+    .close-modal-btn:hover {
+      border-color: var(--primary-neon);
+      box-shadow: 0 0 10px var(--neon-glow);
+    }
+
+    /* اعلان شناور Toast */
+    .toast-notice {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(90px);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--primary-neon);
+      color: #f8fafc;
+      padding: 11px 22px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), 0 0 16px var(--neon-glow);
+      z-index: 1200;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      pointer-events: none;
+    }
+    .toast-notice.show {
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 dark:bg-dark-base dark:text-slate-100 min-h-screen transition-colors duration-500 relative flex flex-col justify-between selection:bg-sky-500 selection:text-white pb-20 md:pb-8">
+<body data-theme="dark">
 
-  <!-- پس‌زمینه نوری شیشه‌ای (Aura Orbs) -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-    <div class="absolute -top-32 -right-32 w-96 h-96 sm:w-[500px] sm:h-[500px] bg-sky-400/20 dark:bg-sky-500/15 rounded-full blur-[110px] animate-orb-slow"></div>
-    <div class="absolute -bottom-32 -left-32 w-96 h-96 sm:w-[500px] sm:h-[500px] bg-emerald-400/20 dark:bg-phosphor/15 rounded-full blur-[110px] animate-orb-reverse"></div>
-  </div>
+  <!-- اورب‌های نوری معلق در پس‌زمینه -->
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
 
-  <!-- کانتینر اصلی اپلیکیشن -->
-  <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+  <!-- کانتینر اصلی -->
+  <div class="app-container">
     
-    <!-- ساختار ریسپانسیو چندستونه -->
-    <div class="flex flex-col lg:flex-row gap-8 items-start">
-      
-      <!-- بخش پروفایل: سایدبار در کامپیوتر و هدر در موبایل/تبلت -->
-      <aside class="w-full lg:w-5/12 flex flex-col items-center text-center lg:sticky lg:top-8 mb-4 lg:mb-0">
-        
-        <!-- نوار ابزار بالا (در صفحات تبلت و دسکتاپ) -->
-        <header class="w-full hidden md:flex items-center justify-between mb-6 px-1">
-          <button 
-            id="themeToggleBtn"
-            onclick="toggleThemeManual()" 
-            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-sky-500 dark:hover:text-sky-300 active:scale-95 transition" 
-            title="تغییر تم شب/روز"
-            aria-label="تغییر تم"
-          >
-            <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
-          </button>
-
-          <div class="flex items-center gap-2">
-            <button onclick="openQrModal()" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-300 active:scale-95 transition" title="اسکن بارکد QR">
-              <i class="fa-solid fa-qrcode text-base"></i>
-            </button>
-            <button onclick="shareProfile()" class="px-3.5 h-10 rounded-xl glass-card text-xs font-semibold flex items-center gap-1.5 text-sky-600 dark:text-sky-400 hover:opacity-80 active:scale-95 transition" title="اشتراک‌گذاری این صفحه">
-              <i class="fa-solid fa-share-nodes text-xs text-emerald-600 dark:text-phosphor"></i>
-              <span>اشتراک‌‌گذاری</span>
-            </button>
-          </div>
-        </header>
-
-        <!-- کارت مشخصات پروفایل مرتضی آبنر -->
-        <div class="glass-card w-full rounded-3xl p-6 sm:p-8 flex flex-col items-center relative overflow-hidden">
-          <div class="relative group mb-2">
-            <div class="absolute -inset-1 bg-gradient-to-r from-sky-400 via-emerald-400 to-phosphor rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-500"></div>
-            <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-sky-400/50 p-1 bg-white dark:bg-dark-base neon-avatar-glow">
-              <img 
-                id="avatarImg"
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=500&q=80" 
-                alt="مرتضی آبنر" 
-                class="w-full h-full object-cover rounded-full transition duration-500 group-hover:scale-105"
-                onerror="this.src='https://placehold.co/250x250/080e1a/38bdf8?text=Morteza+Abner'"
-              >
-            </div>
-            <div class="absolute bottom-1 right-2 bg-gradient-to-r from-sky-400 to-emerald-400 text-slate-950 p-1.5 rounded-full shadow-lg text-xs" title="حساب رسمی">
-              <i class="fa-solid fa-check"></i>
-            </div>
-          </div>
-
-          <h1 class="mt-4 text-3xl sm:text-4xl font-black tracking-tight neon-gradient-title" id="profileName">
-            مرتضی آبنر
-          </h1>
-          
-          <p class="text-xs sm:text-sm font-semibold text-sky-600 dark:text-sky-400 mt-1 tracking-wider" dir="ltr" id="profileHandle">
-            @morteza.abner
-          </p>
-
-          <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-3 px-2 max-w-md leading-relaxed font-normal" id="profileBio">
-            خوش آمدید! برای ورود سریع به هر پلتفرم، روی دکمه مورد نظر کلیک کنید
-          </p>
-
-          <!-- نشانگر دستگاه متصل شده -->
-          <div id="deviceBadge" class="mt-5 px-3 py-1 rounded-full text-[11px] font-medium bg-sky-500/10 dark:bg-sky-400/10 text-sky-600 dark:text-sky-300 border border-sky-400/20 flex items-center gap-1.5">
-            <i id="deviceIcon" class="fa-solid fa-mobile-screen"></i>
-            <span id="deviceText">شناسایی دستگاه...</span>
-          </div>
-        </div>
-      </aside>
-
-      <!-- بخش دکمه‌های پیوند -->
-      <section class="w-full lg:w-7/12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3.5" id="linksList">
-          <!-- لینک‌ها با ساختار جاوااسکریپت لود می‌شوند -->
-        </div>
-      </section>
-
-    </div>
-  </div>
-
-  <!-- نوار پایین برای موبایل (Mobile Bottom App Bar) -->
-  <nav class="md:hidden fixed bottom-3 left-4 right-4 z-40 glass-card rounded-2xl py-2.5 px-6 flex items-center justify-around shadow-2xl border border-sky-400/20">
-    <button onclick="shareProfile()" class="flex flex-col items-center gap-1 text-slate-700 dark:text-slate-200 hover:text-sky-500 dark:hover:text-phosphor transition">
-      <i class="fa-solid fa-share-nodes text-lg"></i>
-      <span class="text-[10px] font-medium">اشتراک</span>
-    </button>
-
-    <button onclick="openQrModal()" class="flex flex-col items-center gap-1 text-slate-700 dark:text-slate-200 hover:text-sky-500 dark:hover:text-phosphor transition">
-      <i class="fa-solid fa-qrcode text-lg"></i>
-      <span class="text-[10px] font-medium">کد QR</span>
-    </button>
-
-    <button onclick="toggleThemeManual()" class="flex flex-col items-center gap-1 text-slate-700 dark:text-slate-200 hover:text-sky-500 dark:hover:text-phosphor transition">
-      <i id="mobileThemeIcon" class="fa-solid fa-moon text-lg"></i>
-      <span class="text-[10px] font-medium">تم</span>
-    </button>
-  </nav>
-
-  <!-- مودال نمایش کد QR -->
-  <div id="qrModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md hidden transition-opacity duration-300">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 text-center flex flex-col items-center border border-sky-400/30">
-      <h3 class="text-lg font-bold mb-1 text-slate-900 dark:text-white">اسکن بارکد QR</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">برای مشاهده مستقیم این صفحه در موبایل خود اسکن کنید</p>
-      
-      <div class="bg-white p-3.5 rounded-2xl shadow-inner border border-slate-200 mb-5">
-        <img 
-          id="qrCodeImg" 
-          src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com/MortezaAbner" 
-          alt="QR Code" 
-          class="w-44 h-44 rounded-lg"
-        >
+    <!-- نوار دسترسی سریع بالا -->
+    <header class="top-actions">
+      <div class="top-action-group">
+        <button class="action-btn" id="themeToggleBtn" title="تغییر تم شب و روز" aria-label="Theme toggle">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
       </div>
+      <div class="top-action-group">
+        <button class="action-btn" id="qrBtn" title="نمایش بارکد QR" aria-label="QR Code">
+          <i class="fa-solid fa-qrcode"></i>
+        </button>
+        <button class="action-btn" id="shareBtn" title="اشتراک‌گذاری صفحه" aria-label="Share">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </header>
 
-      <button onclick="closeQrModal()" class="w-full py-2.5 rounded-xl font-bold bg-gradient-to-r from-sky-400 to-emerald-400 text-slate-950 hover:opacity-90 transition">
-        بستن
-      </button>
+    <!-- کارت اطلاعات پروفایل -->
+    <section class="profile-card">
+      <div class="avatar-wrapper">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="مرتضی آبنر" class="avatar-img" />
+        <span class="verified-badge" title="تأیید هویت رسمی"><i class="fa-solid fa-check"></i></span>
+      </div>
+      <h1 class="profile-name">
+        مرتضی آبنر
+      </h1>
+      <p class="profile-bio">
+        توسعه‌دهنده، طراح و خالق محتوا • ارتباط و دسترسی سریع به تمامی شبکه‌ها و درگاه‌های رسمی من
+      </p>
+    </section>
+
+    <!-- دکمه‌های پیوند با ترتیب درخواستی و توضیحات کامل فارسی -->
+    <main class="links-list" id="linksContainer">
+
+      <!-- ۱. وب‌سایت رسمی -->
+      <a class="link-item" href="javascript:void(0)" onclick="handleWebsiteClick()">
+        <div class="link-right">
+          <div class="icon-box icon-website">
+            <i class="fa-solid fa-globe"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">وب‌سایت رسمی</span>
+            <span class="link-subtitle">پرتال و پایگاه اختصاصی</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <span class="badge-status">به زودی...</span>
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۲. اینستاگرام -->
+      <a class="link-item" href="https://www.instagram.com/morteza.abner" target="_blank" onclick="handleSmartRedirect(event, 'instagram://user?username=morteza.abner', 'https://www.instagram.com/morteza.abner?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==')">
+        <div class="link-right">
+          <div class="icon-box icon-instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">اینستاگرام</span>
+            <span class="link-subtitle">پست‌ها، ریلزها و استوری‌های روزمره</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۳. یوتیوب -->
+      <a class="link-item" href="https://www.youtube.com/@mortezaabner" target="_blank" onclick="handleSmartRedirect(event, 'vnd.youtube://www.youtube.com/@mortezaabner', 'https://www.youtube.com/@mortezaabner')">
+        <div class="link-right">
+          <div class="icon-box icon-youtube">
+            <i class="fa-brands fa-youtube"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">یوتیوب</span>
+            <span class="link-subtitle">ویدیوها، مستندها و محتوای ویدیویی</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۴. تلگرام -->
+      <a class="link-item" href="https://t.me/MortezaAbnerChannel" target="_blank" onclick="handleSmartRedirect(event, 'tg://resolve?domain=MortezaAbnerChannel', 'https://t.me/MortezaAbnerChannel')">
+        <div class="link-right">
+          <div class="icon-box icon-telegram">
+            <i class="fa-brands fa-telegram"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">تلگرام</span>
+            <span class="link-subtitle">کانال رسمی مرتضی آبنر</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۵. تردز (Threads) -->
+      <a class="link-item" href="https://www.threads.com/@morteza.abner" target="_blank" onclick="handleSmartRedirect(event, 'barcelona://user?username=morteza.abner', 'https://www.threads.com/@morteza.abner')">
+        <div class="link-right">
+          <div class="icon-box icon-threads">
+            <i class="fa-brands fa-threads"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">تردز (Threads)</span>
+            <span class="link-subtitle">دیدگاه‌ها، یادداشت‌ها و گفتگوهای روزانه</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۶. ایکس (توییتر) -->
+      <a class="link-item" href="https://x.com/MortezaAbner" target="_blank" onclick="handleSmartRedirect(event, 'twitter://user?screen_name=MortezaAbner', 'https://x.com/MortezaAbner')">
+        <div class="link-right">
+          <div class="icon-box icon-x">
+            <i class="fa-brands fa-x-twitter"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">ایکس (توییتر)</span>
+            <span class="link-subtitle">توییت‌ها، اخبار و افکار کوتاه</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۷. پینترست -->
+      <a class="link-item" href="https://pin.it/6EYGSWiJI" target="_blank" onclick="handleSmartRedirect(event, 'pinterest://user/morteza_abner', 'https://pin.it/6EYGSWiJI')">
+        <div class="link-right">
+          <div class="icon-box icon-pinterest">
+            <i class="fa-brands fa-pinterest"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">پینترست</span>
+            <span class="link-subtitle">پین‌ها و بردهای خلاقانه</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+      <!-- ۸. گیت‌هاب -->
+      <a class="link-item" href="https://github.com/MortezaAbner" target="_blank">
+        <div class="link-right">
+          <div class="icon-box icon-github">
+            <i class="fa-brands fa-github"></i>
+          </div>
+          <div class="link-details">
+            <span class="link-title">گیت‌هاب</span>
+            <span class="link-subtitle">مخازن پروژه‌ها و کدهای منبع</span>
+          </div>
+        </div>
+        <div class="link-left">
+          <i class="fa-solid fa-chevron-left arrow-icon"></i>
+        </div>
+      </a>
+
+    </main>
+
+    <!-- فوتر حق نشر -->
+    <footer class="page-footer">
+      <p>© تمامی حقوق محفوظ است • <a href="#">مرتضی آبنر</a></p>
+    </footer>
+
+  </div>
+
+  <!-- مودال بارکد QR -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="qr-modal-content">
+      <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">اسکن بارکد صفحه</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">جهت انتقال سریع به گوشی هوشمند دوربین را مقابل کد بگیرید</p>
+      <div class="qr-box" id="qrcode"></div>
+      <button class="close-modal-btn" onclick="toggleQRModal(false)">بستن پنجره</button>
     </div>
   </div>
 
-  <!-- اعلان Toast محو شونده -->
-  <div id="toast" class="fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-50 glass-card border border-sky-400/40 text-slate-900 dark:text-slate-100 px-5 py-2.5 rounded-full text-xs font-semibold shadow-2xl flex items-center gap-2 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300">
-    <i class="fa-solid fa-circle-check text-emerald-500 dark:text-phosphor text-sm"></i>
-    <span id="toastMessage">پیام با موفقیت ثبت شد</span>
+  <!-- پیام Toast اعلان -->
+  <div class="toast-notice" id="toastNotice">
+    <i class="fa-solid fa-circle-check" style="color: var(--primary-neon);"></i>
+    <span id="toastMsg">لینک صفحه با موفقیت کپی شد!</span>
   </div>
 
-  <footer class="text-center text-xs text-slate-500 dark:text-slate-500 py-3 relative z-10 hidden md:block">
-    <p>© ۲۰۲۶ تمامی حقوق برای مرتضی آبنر محفوظ است.</p>
-  </footer>
-
-  <!-- اسکریپت و تنظیمات اختصاصی مرتضی آبنر -->
   <script>
-    const MY_CONFIG = {
-      name: "مرتضی آبنر",
-      handle: "@morteza.abner",
-      bio: "خوش آمدید! برای ورود سریع به هر پلتفرم، روی دکمه مورد نظر کلیک کنید",
-      
-      links: [
-        {
-          id: "website",
-          title: "وب‌سایت رسمی",
-          subtitle: "پرتال و پایگاه اختصاصی",
-          badge: "به زودی...",
-          iconClass: "fa-solid fa-globe",
-          color: "from-sky-500 to-blue-600",
-          webUrl: "#",
-          appUrl: "#",
-          isPending: true
-        },
-        {
-          id: "instagram",
-          title: "اینستاگرام",
-          subtitle: "@morteza.abner",
-          iconClass: "fa-brands fa-instagram",
-          color: "from-pink-500 via-rose-500 to-amber-500",
-          webUrl: "https://www.instagram.com/morteza.abner?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==",
-          appUrl: "instagram://user?username=morteza.abner"
-        },
-        {
-          id: "youtube",
-          title: "یوتیوب",
-          subtitle: "@mortezaabner",
-          iconClass: "fa-brands fa-youtube",
-          color: "from-red-500 to-rose-700",
-          webUrl: "https://www.youtube.com/@mortezaabner",
-          appUrl: "vnd.youtube://www.youtube.com/@mortezaabner"
-        },
-        {
-          id: "telegram",
-          title: "تلگرام",
-          subtitle: "کانال رسمی مرتضی آبنر",
-          iconClass: "fa-brands fa-telegram",
-          color: "from-sky-400 to-blue-500",
-          webUrl: "https://t.me/MortezaAbnerChannel",
-          appUrl: "tg://resolve?domain=MortezaAbnerChannel"
-        },
-        {
-          id: "threads",
-          title: "تردز (Threads)",
-          subtitle: "@morteza.abner",
-          iconClass: "fa-brands fa-threads",
-          color: "from-slate-700 to-slate-900",
-          webUrl: "https://www.threads.com/@morteza.abner",
-          appUrl: "barcelona://user?username=morteza.abner"
-        },
-        {
-          id: "twitter",
-          title: "ایکس (توییتر)",
-          subtitle: "@MortezaAbner",
-          iconClass: "fa-brands fa-x-twitter",
-          color: "from-zinc-700 to-zinc-900",
-          webUrl: "https://twitter.com/MortezaAbner",
-          appUrl: "twitter://user?screen_name=MortezaAbner"
-        },
-        {
-          id: "pinterest",
-          title: "پینترست",
-          subtitle: "پین‌ها و بردهای خلاقانه",
-          iconClass: "fa-brands fa-pinterest-p",
-          color: "from-red-600 to-rose-700",
-          webUrl: "https://pin.it/6EYGSWiJI",
-          appUrl: "pinterest://pin.it/6EYGSWiJI"
-        },
-        {
-          id: "github",
-          title: "گیت‌هاب",
-          subtitle: "MortezaAbner",
-          iconClass: "fa-brands fa-github",
-          color: "from-gray-700 to-gray-900",
-          webUrl: "https://github.com/MortezaAbner",
-          appUrl: "https://github.com/MortezaAbner"
-        }
-      ]
-    };
-
-    // شناسایی نوع دستگاه (موبایل، تبلت، کامپیوتر یا تلویزیون)
-    function detectDevice() {
-      const ua = navigator.userAgent.toLowerCase();
-      const isMobile = /mobile|iphone|ipod|android.*mobile/.test(ua);
-      const isTablet = /ipad|tablet|(android(?!.*mobile))/.test(ua);
-      const isSmartTV = /tv|smarttv|googletv|appletv|hbbtv|pov_tv|netcast.tv/.test(ua) || (window.innerWidth >= 1920 && !isMobile && !isTablet && ('getBattery' in navigator === false));
-
-      const badge = document.getElementById('deviceBadge');
-      const icon = document.getElementById('deviceIcon');
-      const text = document.getElementById('deviceText');
-
-      if (isSmartTV) {
-        document.body.classList.add('tv-scale');
-        icon.className = "fa-solid fa-tv";
-        text.innerText = "نمای تلویزیون هوشمند";
-        return "tv";
-      } else if (isTablet) {
-        icon.className = "fa-solid fa-tablet-screen-button";
-        text.innerText = "نمای تبلت";
-        return "tablet";
-      } else if (isMobile) {
-        icon.className = "fa-solid fa-mobile-screen";
-        text.innerText = "وب‌اپ موبایل";
-        return "mobile";
-      } else {
-        icon.className = "fa-solid fa-desktop";
-        text.innerText = "نمای دسکتاپ";
-        return "desktop";
-      }
-    }
-
-    // هدایت هوشمند به اپلیکیشن موبایل (Deep Link) یا وب
-    function handleSmartLink(linkId) {
-      const item = MY_CONFIG.links.find(l => l.id === linkId);
-      if (!item) return;
-
-      if (item.isPending) {
-        showToast("وب‌سایت در حال آماده‌سازی است. به زودی در دسترس خواهد بود!");
+    /* تشخیص هوشمند تم روز و شب بر اساس ساعت محلی دستگاه و ترجیحات سیستم */
+    function initializeAutoTheme() {
+      const savedTheme = localStorage.getItem('user_theme_pref');
+      if (savedTheme) {
+        setTheme(savedTheme);
         return;
       }
-
-      const isMobile = /iphone|ipad|ipod|android/.test(navigator.userAgent.toLowerCase());
-
-      if (isMobile && item.appUrl && item.appUrl !== "#") {
-        const start = Date.now();
-        window.location.href = item.appUrl;
-
-        setTimeout(() => {
-          if (Date.now() - start < 1800) {
-            window.open(item.webUrl, '_blank');
-          }
-        }, 1200);
+      
+      const currentHour = new Date().getHours();
+      // بین ساعت ۶ عصر (18) تا ۶ صبح، حالت شب فعال می‌شود
+      const isNightTime = currentHour >= 18 || currentHour < 6;
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (isNightTime || prefersDark) {
+        setTheme('dark');
       } else {
-        window.open(item.webUrl, '_blank');
+        setTheme('light');
       }
     }
 
-    // رندر کردن دکمه‌های پیوند
-    function renderLinks() {
-      const container = document.getElementById('linksList');
-      container.innerHTML = '';
-
-      MY_CONFIG.links.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.tabIndex = 0; // امکان فوکوس برای تلویزیون و ریموت کنترل
-        card.className = "glass-btn rounded-2xl p-3.5 sm:p-4 flex items-center justify-between cursor-pointer focus:outline-none transition group";
-        card.onclick = () => handleSmartLink(item.id);
-        
-        card.onkeydown = (e) => {
-          if (e.key === "Enter") handleSmartLink(item.id);
-        };
-
-        card.innerHTML = `
-          <div class="flex items-center gap-3.5 min-w-0">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white bg-gradient-to-tr ${item.color} shadow-md group-hover:scale-110 transition duration-300 flex-shrink-0">
-              <i class="${item.iconClass} text-xl"></i>
-            </div>
-            <div class="text-right truncate">
-              <h2 class="font-bold text-sm sm:text-base text-slate-800 dark:text-white group-hover:text-sky-500 dark:group-hover:text-sky-300 transition">
-                ${item.title}
-              </h2>
-              <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5" dir="ltr">
-                ${item.subtitle}
-              </p>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2 flex-shrink-0 mr-2">
-            ${item.badge ? `
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                ${item.badge}
-              </span>
-            ` : ''}
-            <i class="fa-solid fa-angle-left text-slate-400 group-hover:-translate-x-1 group-hover:text-sky-400 transition text-sm"></i>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    // مدیریت تم هوشمند (بر اساس ساعت و سیستم)
-    function initTheme() {
-      const savedTheme = localStorage.getItem('theme_preference');
-      const hour = new Date().getHours();
-      const isNightTime = (hour >= 18 || hour < 6);
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      let shouldUseDark = true;
-      if (savedTheme) {
-        shouldUseDark = (savedTheme === 'dark');
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      const icon = document.getElementById('themeIcon');
+      if (theme === 'dark') {
+        icon.className = 'fa-solid fa-moon';
       } else {
-        shouldUseDark = isNightTime || systemPrefersDark;
+        icon.className = 'fa-solid fa-sun';
       }
-
-      applyTheme(shouldUseDark);
+      localStorage.setItem('user_theme_pref', theme);
     }
 
-    function applyTheme(isDark) {
-      const html = document.documentElement;
-      const themeIcon = document.getElementById('themeIcon');
-      const mobileThemeIcon = document.getElementById('mobileThemeIcon');
-
-      if (isDark) {
-        html.classList.add('dark');
-        if (themeIcon) themeIcon.className = "fa-solid fa-sun text-amber-400";
-        if (mobileThemeIcon) mobileThemeIcon.className = "fa-solid fa-sun text-amber-400";
-      } else {
-        html.classList.remove('dark');
-        if (themeIcon) themeIcon.className = "fa-solid fa-moon text-slate-700";
-        if (mobileThemeIcon) mobileThemeIcon.className = "fa-solid fa-moon text-slate-700";
-      }
-    }
-
-    function toggleThemeManual() {
-      const isCurrentlyDark = document.documentElement.classList.contains('dark');
-      const newDarkState = !isCurrentlyDark;
-      applyTheme(newDarkState);
-      localStorage.setItem('theme_preference', newDarkState ? 'dark' : 'light');
-      showToast(newDarkState ? "حالت تاریک فعال شد" : "حالت روشن فعال شد");
-    }
-
-    // مودال QR Code
-    function openQrModal() {
-      const modal = document.getElementById('qrModal');
-      const currentUrl = encodeURIComponent(window.location.href);
-      document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${currentUrl}`;
-      modal.classList.remove('hidden');
-    }
-
-    function closeQrModal() {
-      document.getElementById('qrModal').classList.add('hidden');
-    }
-
-    // اشتراک‌گذاری صفحه
-    function shareProfile() {
-      if (navigator.share) {
-        navigator.share({
-          title: "مرتضی آبنر | Morteza Abner",
-          text: "مشاهده تمام پیوندها و شبکه‌های اجتماعی مرتضی آبنر",
-          url: window.location.href,
-        }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          showToast("لینک صفحه در کلیپ‌بورد کپی شد");
-        }).catch(() => {
-          showToast("خطا در کپی لینک");
-        });
-      }
-    }
-
-    // نمایش اعلان Toast
-    let toastTimeout;
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toastMessage');
-      toastMsg.innerText = msg;
-
-      clearTimeout(toastTimeout);
-      toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-      toast.classList.add('opacity-100', 'translate-y-0');
-
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-      }, 2600);
-    }
-
-    // راه‌اندازی اولیه
-    window.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      detectDevice();
-      renderLinks();
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      const current = document.body.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+      showToast(current === 'dark' ? 'حالت روز فعال شد' : 'حالت شب فعال شد');
     });
+
+    /* مدیریت Deep Linking هوشمند موبایل */
+    function handleSmartRedirect(e, appUri, webUri) {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (!isMobile) return; // در دسکتاپ حالت عادی لینک اجرا می‌شود
+
+      e.preventDefault();
+      const start = Date.now();
+      window.location.href = appUri;
+
+      setTimeout(() => {
+        // در صورتی که اپلیکیشن نصب نباشد پس از ۱.۵ ثانیه نسخه وب باز می‌شود
+        if (Date.now() - start < 2000) {
+          window.open(webUri, '_blank');
+        }
+      }, 1500);
+    }
+
+    /* پیام در صورت کلیک روی وب‌‌سایت */
+    function handleWebsiteClick() {
+      showToast('وب‌سایت رسمی به زودی رونمایی خواهد شد.');
+    }
+
+    /* دکمه اشتراک‌گذاری */
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const currentUrl = window.location.href;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'صفحه اختصاصی پیوندهای مرتضی آبنر',
+            text: 'ارتباط مستقیم با مرتضی آبنر در تمامی شبکه‌های اجتماعی:',
+            url: currentUrl
+          });
+        } catch (err) {
+          copyToClipboard(currentUrl);
+        }
+      } else {
+        copyToClipboard(currentUrl);
+      }
+    });
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('لینک صفحه با موفقیت در کلیپ‌بورد کپی شد!');
+        });
+      } else {
+        showToast('آدرس صفحه: ' + text);
+      }
+    }
+
+    /* نمایش اعلان Toast */
+    function showToast(message) {
+      const toast = document.getElementById('toastNotice');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    /* مودال بارکد QR */
+    let qrGenerated = false;
+    function toggleQRModal(show) {
+      const modal = document.getElementById('qrModal');
+      if (show) {
+        modal.classList.add('active');
+        if (!qrGenerated && typeof QRCode !== 'undefined') {
+          new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 170,
+            height: 170,
+            colorDark : "#0f172a",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+          });
+          qrGenerated = true;
+        }
+      } else {
+        modal.classList.remove('active');
+      }
+    }
+
+    document.getElementById('qrBtn').addEventListener('click', () => toggleQRModal(true));
+    document.getElementById('qrModal').addEventListener('click', (e) => {
+      if (e.target.id === 'qrModal') toggleQRModal(false);
+    });
+
+    // راه‌اندازی تم در زمان لود صفحه
+    initializeAutoTheme();
   </script>
 </body>
 </html>
