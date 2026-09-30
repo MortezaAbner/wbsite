@@ -4,57 +4,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>مرتضی آبنر | Morteza Abner</title>
-  
-  <!-- فونت وزیرمتن -->
+
+  <!-- فونت وزیرمتن برای نمایش زیبا در موبایل -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome برای آیکون‌ها -->
+
+  <!-- آیکون‌های شبکه‌های اجتماعی -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <!-- کتابخانه تولید خودکار QR Code -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
       --primary-sky: #38bdf8;
       --primary-neon: #39ff14;
-      --neon-glow: rgba(57, 255, 20, 0.45);
-      --sky-glow: rgba(56, 189, 248, 0.4);
+      --sky-glow: rgba(56, 189, 248, 0.35);
+      --neon-glow: rgba(57, 255, 20, 0.4);
       --font-main: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* حالت دارک (پیش‌فرض) */
+    /* حالت تیره (دارک مود) */
     body[data-theme="dark"] {
-      --bg-gradient: radial-gradient(circle at 15% 20%, #031326 0%, #050b14 50%, #020617 100%);
+      --bg-color: #030712;
+      --bg-gradient: radial-gradient(circle at 10% 20%, #031326 0%, #060e1e 45%, #020617 100%);
       --glass-bg: rgba(15, 23, 42, 0.65);
       --glass-border: rgba(56, 189, 248, 0.22);
-      --glass-hover-border: rgba(57, 255, 20, 0.55);
+      --glass-hover-border: rgba(57, 255, 20, 0.6);
       --card-bg: rgba(30, 41, 59, 0.45);
       --card-hover: rgba(30, 41, 59, 0.75);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --icon-box-bg: rgba(15, 23, 42, 0.85);
       --badge-bg: rgba(56, 189, 248, 0.15);
       --badge-text: #38bdf8;
-      --modal-bg: rgba(11, 19, 36, 0.95);
-      --orb-opacity: 0.28;
+      --orb-opacity: 0.25;
     }
 
-    /* حالت لایت */
+    /* حالت روشن (لایت مود) */
     body[data-theme="light"] {
-      --bg-gradient: radial-gradient(circle at 20% 20%, #e0f2fe 0%, #f0fdf4 45%, #f8fafc 100%);
+      --bg-color: #f8fafc;
+      --bg-gradient: radial-gradient(circle at 15% 15%, #e0f2fe 0%, #f0fdf4 50%, #f8fafc 100%);
       --glass-bg: rgba(255, 255, 255, 0.75);
-      --glass-border: rgba(56, 189, 248, 0.4);
+      --glass-border: rgba(56, 189, 248, 0.35);
       --glass-hover-border: rgba(34, 197, 94, 0.65);
-      --card-bg: rgba(255, 255, 255, 0.82);
-      --card-hover: rgba(255, 255, 255, 0.96);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-hover: rgba(255, 255, 255, 0.98);
       --text-main: #0f172a;
       --text-muted: #475569;
-      --icon-box-bg: #ffffff;
       --badge-bg: rgba(2, 132, 199, 0.12);
       --badge-text: #0284c7;
-      --modal-bg: rgba(255, 255, 255, 0.98);
       --orb-opacity: 0.18;
     }
 
@@ -74,105 +70,89 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 30px 16px 80px 16px;
+      padding: 24px 16px 50px 16px;
       position: relative;
       overflow-x: hidden;
-      transition: background 0.4s ease, color 0.4s ease;
+      transition: background 0.35s ease, color 0.35s ease;
     }
 
-    /* پس‌زمینه نوری شیشه‌ای (Ambient Orbs) */
+    /* نورهای متحرک شیشه‌ای پس‌زمینه */
     .ambient-orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(95px);
+      filter: blur(85px);
       z-index: 0;
       pointer-events: none;
       opacity: var(--orb-opacity);
-      transition: opacity 0.5s ease;
     }
     .orb-1 {
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       background: var(--primary-sky);
-      top: -60px;
-      right: -80px;
-      animation: float 9s infinite alternate ease-in-out;
+      top: -40px;
+      right: -60px;
     }
     .orb-2 {
-      width: 300px;
-      height: 300px;
+      width: 260px;
+      height: 260px;
       background: var(--primary-neon);
-      bottom: 40px;
-      left: -90px;
-      animation: float 11s infinite alternate-reverse ease-in-out;
+      bottom: 20px;
+      left: -60px;
     }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, 35px) scale(1.1); }
-    }
-
-    /* کانتینر اصلی اپلیکیشن */
-    .app-container {
+    .container {
       width: 100%;
-      max-width: 520px;
+      max-width: 480px;
       position: relative;
       z-index: 10;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 16px;
     }
 
-    /* نوار ابزار بالا (تم، اشتراک‌گذاری، بارکد) */
-    .top-actions {
+    /* نوار کنترل تم و اشتراک‌گذاری */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 10px 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border-radius: 18px;
+      padding: 8px 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     }
-    .top-action-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .action-btn {
+    .icon-btn {
       background: var(--card-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-main);
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.05rem;
+      font-size: 1rem;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
-    .action-btn:hover {
+    .icon-btn:active {
+      transform: scale(0.92);
       border-color: var(--primary-neon);
-      box-shadow: 0 0 14px var(--neon-glow);
-      transform: translateY(-2px);
     }
 
-    /* کارت پروفایل */
+    /* کادر پروفایل */
     .profile-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
-      border-radius: 26px;
-      padding: 28px 20px;
+      border-radius: 22px;
+      padding: 24px 18px;
       text-align: center;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
       position: relative;
-      overflow: hidden;
     }
     .profile-card::before {
       content: '';
@@ -180,111 +160,97 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 4px;
+      height: 3px;
       background: linear-gradient(90deg, var(--primary-sky), var(--primary-neon));
     }
     .avatar-wrapper {
       position: relative;
-      width: 105px;
-      height: 105px;
-      margin: 0 auto 16px auto;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 14px auto;
     }
     .avatar-img {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
       background: linear-gradient(135deg, var(--primary-sky), var(--primary-neon)) border-box;
-      box-shadow: 0 0 24px var(--sky-glow);
+      box-shadow: 0 0 20px var(--sky-glow);
     }
-    .verified-badge {
+    .verified-icon {
       position: absolute;
-      bottom: 4px;
-      left: 6px;
+      bottom: 2px;
+      left: 4px;
       background: #0284c7;
       color: #fff;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 0.8rem;
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid var(--modal-bg);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      border: 2px solid #0f172a;
     }
     .profile-name {
-      font-size: 1.55rem;
+      font-size: 1.45rem;
       font-weight: 800;
-      letter-spacing: -0.3px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      margin-bottom: 5px;
     }
     .profile-bio {
       color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      max-width: 410px;
-      margin: 0 auto;
-      font-weight: 400;
+      font-size: 0.9rem;
+      line-height: 1.55;
     }
 
-    /* فهرست دکمه‌های پیوند */
+    /* لیست دکمه‌ها */
     .links-list {
       display: flex;
       flex-direction: column;
-      gap: 13px;
+      gap: 12px;
     }
-    .link-item {
+    .link-card {
       background: var(--card-bg);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 13px 18px;
+      border-radius: 18px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       text-decoration: none;
       color: var(--text-main);
       cursor: pointer;
-      position: relative;
-      transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     }
-    .link-item:hover, .link-item:focus {
-      background: var(--card-hover);
+    .link-card:active {
+      transform: scale(0.98);
       border-color: var(--primary-neon);
-      transform: translateY(-3px) scale(1.012);
-      box-shadow: 0 10px 24px var(--neon-glow);
-    }
-    .link-item:active {
-      transform: scale(0.985);
+      box-shadow: 0 6px 18px var(--neon-glow);
     }
 
     .link-right {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 14px;
     }
     .icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 15px;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.45rem;
+      font-size: 1.35rem;
       color: #fff;
       flex-shrink: 0;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    /* رنگ‌های اختصاصی آیکون‌ها */
+    /* گرادینت آیکون‌ها بر اساس پلتفرم */
     .icon-website { background: linear-gradient(135deg, #0284c7, #38bdf8); }
     .icon-instagram { background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888); }
     .icon-youtube { background: linear-gradient(135deg, #dc2626, #ef4444); }
@@ -294,18 +260,18 @@
     .icon-pinterest { background: linear-gradient(135deg, #e60023, #bd081c); }
     .icon-github { background: linear-gradient(135deg, #24292e, #181717); }
 
-    .link-details {
+    .link-info {
       display: flex;
       flex-direction: column;
       text-align: right;
     }
     .link-title {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
-      line-height: 1.35;
+      line-height: 1.3;
     }
-    .link-subtitle {
-      font-size: 0.84rem;
+    .link-desc {
+      font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 3px;
       font-weight: 400;
@@ -314,197 +280,111 @@
     .link-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .badge-status {
-      font-size: 0.76rem;
-      padding: 3px 9px;
-      border-radius: 12px;
+    .soon-badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 10px;
       background: var(--badge-bg);
       color: var(--badge-text);
       font-weight: 600;
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
     .arrow-icon {
       color: var(--text-muted);
-      font-size: 0.95rem;
-      transition: transform 0.25s ease, color 0.25s ease;
-    }
-    .link-item:hover .arrow-icon {
-      transform: translateX(-4px);
-      color: var(--primary-neon);
+      font-size: 0.85rem;
     }
 
     /* فوتر */
-    .page-footer {
+    .footer {
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 8px;
-    }
-    .page-footer a {
-      color: var(--primary-sky);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* پنجره مودال بارکد QR */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .qr-modal-content {
-      background: var(--modal-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 26px;
-      padding: 26px 22px;
-      max-width: 340px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
-      transform: scale(0.92);
-      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .modal-overlay.active .qr-modal-content {
-      transform: scale(1);
-    }
-    .qr-box {
-      background: #ffffff;
-      padding: 16px;
-      border-radius: 18px;
-      display: inline-block;
-      margin: 18px 0;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    }
-    .close-modal-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main);
-      padding: 10px 22px;
-      border-radius: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s ease;
-    }
-    .close-modal-btn:hover {
-      border-color: var(--primary-neon);
-      box-shadow: 0 0 10px var(--neon-glow);
+      font-size: 0.8rem;
+      margin-top: 6px;
     }
 
     /* اعلان شناور Toast */
-    .toast-notice {
+    .toast {
       position: fixed;
-      bottom: 25px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(90px);
+      transform: translateX(-50%) translateY(80px);
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid var(--primary-neon);
-      color: #f8fafc;
-      padding: 11px 22px;
-      border-radius: 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), 0 0 16px var(--neon-glow);
-      z-index: 1200;
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 12px var(--neon-glow);
+      z-index: 1000;
+      transition: transform 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       pointer-events: none;
     }
-    .toast-notice.show {
+    .toast.active {
       transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body data-theme="dark">
 
-  <!-- اورب‌های نوری معلق در پس‌زمینه -->
   <div class="ambient-orb orb-1"></div>
   <div class="ambient-orb orb-2"></div>
 
-  <!-- کانتینر اصلی -->
-  <div class="app-container">
+  <div class="container">
     
-    <!-- نوار دسترسی سریع بالا -->
-    <header class="top-actions">
-      <div class="top-action-group">
-        <button class="action-btn" id="themeToggleBtn" title="تغییر تم شب و روز" aria-label="Theme toggle">
-          <i class="fa-solid fa-moon" id="themeIcon"></i>
-        </button>
-      </div>
-      <div class="top-action-group">
-        <button class="action-btn" id="qrBtn" title="نمایش بارکد QR" aria-label="QR Code">
-          <i class="fa-solid fa-qrcode"></i>
-        </button>
-        <button class="action-btn" id="shareBtn" title="اشتراک‌گذاری صفحه" aria-label="Share">
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
-      </div>
+    <!-- نوار بالا: تم و اشتراک‌گذاری -->
+    <header class="top-bar">
+      <button class="icon-btn" id="themeBtn" aria-label="تغییر تم">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+      <button class="icon-btn" id="shareBtn" aria-label="اشتراک‌گذاری">
+        <i class="fa-solid fa-share-nodes"></i>
+      </button>
     </header>
 
-    <!-- کارت اطلاعات پروفایل -->
+    <!-- کارت اطلاعات کاربر -->
     <section class="profile-card">
       <div class="avatar-wrapper">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="مرتضی آبنر" class="avatar-img" />
-        <span class="verified-badge" title="تأیید هویت رسمی"><i class="fa-solid fa-check"></i></span>
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=350&q=80" alt="مرتضی آبنر" class="avatar-img" />
+        <span class="verified-icon"><i class="fa-solid fa-check"></i></span>
       </div>
-      <h1 class="profile-name">
-        مرتضی آبنر
-      </h1>
-      <p class="profile-bio">
-        توسعه‌دهنده، طراح و خالق محتوا • ارتباط و دسترسی سریع به تمامی شبکه‌ها و درگاه‌های رسمی من
-      </p>
+      <h1 class="profile-name">مرتضی آبنر</h1>
+      <p class="profile-bio">درگاه رسمی ارتباطی و دسترسی به تمامی شبکه‌ها و صفحات من</p>
     </section>
 
-    <!-- دکمه‌های پیوند با ترتیب درخواستی و توضیحات کامل فارسی -->
-    <main class="links-list" id="linksContainer">
+    <!-- لیست دکمه‌ها با توضیحات کامل -->
+    <main class="links-list">
 
       <!-- ۱. وب‌سایت رسمی -->
-      <a class="link-item" href="javascript:void(0)" onclick="handleWebsiteClick()">
+      <div class="link-card" onclick="showToast('وب‌سایت به زودی فعال می‌شود.')">
         <div class="link-right">
           <div class="icon-box icon-website">
             <i class="fa-solid fa-globe"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">وب‌سایت رسمی</span>
-            <span class="link-subtitle">پرتال و پایگاه اختصاصی</span>
+            <span class="link-desc">پرتال و پایگاه اختصاصی</span>
           </div>
         </div>
         <div class="link-left">
-          <span class="badge-status">به زودی...</span>
+          <span class="soon-badge">به زودی...</span>
           <i class="fa-solid fa-chevron-left arrow-icon"></i>
         </div>
-      </a>
+      </div>
 
       <!-- ۲. اینستاگرام -->
-      <a class="link-item" href="https://www.instagram.com/morteza.abner" target="_blank" onclick="handleSmartRedirect(event, 'instagram://user?username=morteza.abner', 'https://www.instagram.com/morteza.abner?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==')">
+      <a class="link-card" href="https://www.instagram.com/morteza.abner?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" onclick="handleLink(event, 'instagram://user?username=morteza.abner', this.href)">
         <div class="link-right">
           <div class="icon-box icon-instagram">
             <i class="fa-brands fa-instagram"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">اینستاگرام</span>
-            <span class="link-subtitle">پست‌ها، ریلزها و استوری‌های روزمره</span>
+            <span class="link-desc">@morteza.abner</span>
           </div>
         </div>
         <div class="link-left">
@@ -513,14 +393,14 @@
       </a>
 
       <!-- ۳. یوتیوب -->
-      <a class="link-item" href="https://www.youtube.com/@mortezaabner" target="_blank" onclick="handleSmartRedirect(event, 'vnd.youtube://www.youtube.com/@mortezaabner', 'https://www.youtube.com/@mortezaabner')">
+      <a class="link-card" href="https://www.youtube.com/@mortezaabner" target="_blank" onclick="handleLink(event, 'vnd.youtube://www.youtube.com/@mortezaabner', this.href)">
         <div class="link-right">
           <div class="icon-box icon-youtube">
             <i class="fa-brands fa-youtube"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">یوتیوب</span>
-            <span class="link-subtitle">ویدیوها، مستندها و محتوای ویدیویی</span>
+            <span class="link-desc">@mortezaabner</span>
           </div>
         </div>
         <div class="link-left">
@@ -529,14 +409,14 @@
       </a>
 
       <!-- ۴. تلگرام -->
-      <a class="link-item" href="https://t.me/MortezaAbnerChannel" target="_blank" onclick="handleSmartRedirect(event, 'tg://resolve?domain=MortezaAbnerChannel', 'https://t.me/MortezaAbnerChannel')">
+      <a class="link-card" href="https://t.me/MortezaAbnerChannel" target="_blank" onclick="handleLink(event, 'tg://resolve?domain=MortezaAbnerChannel', this.href)">
         <div class="link-right">
           <div class="icon-box icon-telegram">
             <i class="fa-brands fa-telegram"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">تلگرام</span>
-            <span class="link-subtitle">کانال رسمی مرتضی آبنر</span>
+            <span class="link-desc">کانال رسمی مرتضی آبنر</span>
           </div>
         </div>
         <div class="link-left">
@@ -545,14 +425,14 @@
       </a>
 
       <!-- ۵. تردز (Threads) -->
-      <a class="link-item" href="https://www.threads.com/@morteza.abner" target="_blank" onclick="handleSmartRedirect(event, 'barcelona://user?username=morteza.abner', 'https://www.threads.com/@morteza.abner')">
+      <a class="link-card" href="https://www.threads.com/@morteza.abner" target="_blank" onclick="handleLink(event, 'barcelona://user?username=morteza.abner', this.href)">
         <div class="link-right">
           <div class="icon-box icon-threads">
             <i class="fa-brands fa-threads"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">تردز (Threads)</span>
-            <span class="link-subtitle">دیدگاه‌ها، یادداشت‌ها و گفتگوهای روزانه</span>
+            <span class="link-desc">@morteza.abner</span>
           </div>
         </div>
         <div class="link-left">
@@ -561,14 +441,14 @@
       </a>
 
       <!-- ۶. ایکس (توییتر) -->
-      <a class="link-item" href="https://x.com/MortezaAbner" target="_blank" onclick="handleSmartRedirect(event, 'twitter://user?screen_name=MortezaAbner', 'https://x.com/MortezaAbner')">
+      <a class="link-card" href="https://x.com/MortezaAbner" target="_blank" onclick="handleLink(event, 'twitter://user?screen_name=MortezaAbner', this.href)">
         <div class="link-right">
           <div class="icon-box icon-x">
             <i class="fa-brands fa-x-twitter"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">ایکس (توییتر)</span>
-            <span class="link-subtitle">توییت‌ها، اخبار و افکار کوتاه</span>
+            <span class="link-desc">@MortezaAbner</span>
           </div>
         </div>
         <div class="link-left">
@@ -577,14 +457,14 @@
       </a>
 
       <!-- ۷. پینترست -->
-      <a class="link-item" href="https://pin.it/6EYGSWiJI" target="_blank" onclick="handleSmartRedirect(event, 'pinterest://user/morteza_abner', 'https://pin.it/6EYGSWiJI')">
+      <a class="link-card" href="https://pin.it/6EYGSWiJI" target="_blank" onclick="handleLink(event, 'pinterest://user/morteza_abner', this.href)">
         <div class="link-right">
           <div class="icon-box icon-pinterest">
             <i class="fa-brands fa-pinterest"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">پینترست</span>
-            <span class="link-subtitle">پین‌ها و بردهای خلاقانه</span>
+            <span class="link-desc">پین‌ها و بردهای خلاقانه</span>
           </div>
         </div>
         <div class="link-left">
@@ -593,14 +473,14 @@
       </a>
 
       <!-- ۸. گیت‌هاب -->
-      <a class="link-item" href="https://github.com/MortezaAbner" target="_blank">
+      <a class="link-card" href="https://github.com/MortezaAbner" target="_blank">
         <div class="link-right">
           <div class="icon-box icon-github">
             <i class="fa-brands fa-github"></i>
           </div>
-          <div class="link-details">
+          <div class="link-info">
             <span class="link-title">گیت‌هاب</span>
-            <span class="link-subtitle">مخازن پروژه‌ها و کدهای منبع</span>
+            <span class="link-desc">MortezaAbner</span>
           </div>
         </div>
         <div class="link-left">
@@ -610,157 +490,93 @@
 
     </main>
 
-    <!-- فوتر حق نشر -->
-    <footer class="page-footer">
-      <p>© تمامی حقوق محفوظ است • <a href="#">مرتضی آبنر</a></p>
+    <footer class="footer">
+      <p>© تمامی حقوق محفوظ است • مرتضی آبنر</p>
     </footer>
 
   </div>
 
-  <!-- مودال بارکد QR -->
-  <div class="modal-overlay" id="qrModal">
-    <div class="qr-modal-content">
-      <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">اسکن بارکد صفحه</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">جهت انتقال سریع به گوشی هوشمند دوربین را مقابل کد بگیرید</p>
-      <div class="qr-box" id="qrcode"></div>
-      <button class="close-modal-btn" onclick="toggleQRModal(false)">بستن پنجره</button>
-    </div>
-  </div>
-
-  <!-- پیام Toast اعلان -->
-  <div class="toast-notice" id="toastNotice">
+  <!-- پیام اعلان کوتاه Toast -->
+  <div class="toast" id="toast">
     <i class="fa-solid fa-circle-check" style="color: var(--primary-neon);"></i>
-    <span id="toastMsg">لینک صفحه با موفقیت کپی شد!</span>
+    <span id="toastMsg"></span>
   </div>
 
   <script>
-    /* تشخیص هوشمند تم روز و شب بر اساس ساعت محلی دستگاه و ترجیحات سیستم */
-    function initializeAutoTheme() {
-      const savedTheme = localStorage.getItem('user_theme_pref');
-      if (savedTheme) {
-        setTheme(savedTheme);
-        return;
-      }
-      
-      const currentHour = new Date().getHours();
-      // بین ساعت ۶ عصر (18) تا ۶ صبح، حالت شب فعال می‌شود
-      const isNightTime = currentHour >= 18 || currentHour < 6;
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (isNightTime || prefersDark) {
-        setTheme('dark');
-      } else {
-        setTheme('light');
-      }
+    // تنظیم خودکار تم بر اساس ساعت دستگاه (ساعت ۱۸ تا ۶ دارک، ۶ تا ۱۸ لایت)
+    function setupTheme() {
+      const hour = new Date().getHours();
+      const isNight = hour >= 18 || hour < 6;
+      const theme = isNight ? 'dark' : 'light';
+      applyTheme(theme);
     }
 
-    function setTheme(theme) {
+    function applyTheme(theme) {
       document.body.setAttribute('data-theme', theme);
       const icon = document.getElementById('themeIcon');
-      if (theme === 'dark') {
-        icon.className = 'fa-solid fa-moon';
-      } else {
-        icon.className = 'fa-solid fa-sun';
-      }
-      localStorage.setItem('user_theme_pref', theme);
+      icon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
     }
 
-    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    document.getElementById('themeBtn').addEventListener('click', () => {
       const current = document.body.getAttribute('data-theme');
-      setTheme(current === 'dark' ? 'light' : 'dark');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
       showToast(current === 'dark' ? 'حالت روز فعال شد' : 'حالت شب فعال شد');
     });
 
-    /* مدیریت Deep Linking هوشمند موبایل */
-    function handleSmartRedirect(e, appUri, webUri) {
+    // باز کردن مستقیم اپلیکیشن در موبایل (Deep Linking)
+    function handleLink(e, appUri, webUri) {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (!isMobile) return; // در دسکتاپ حالت عادی لینک اجرا می‌شود
+      if (!isMobile) return;
 
       e.preventDefault();
       const start = Date.now();
       window.location.href = appUri;
 
       setTimeout(() => {
-        // در صورتی که اپلیکیشن نصب نباشد پس از ۱.۵ ثانیه نسخه وب باز می‌شود
-        if (Date.now() - start < 2000) {
+        if (Date.now() - start < 1800) {
           window.open(webUri, '_blank');
         }
-      }, 1500);
+      }, 1200);
     }
 
-    /* پیام در صورت کلیک روی وب‌‌سایت */
-    function handleWebsiteClick() {
-      showToast('وب‌سایت رسمی به زودی رونمایی خواهد شد.');
-    }
-
-    /* دکمه اشتراک‌گذاری */
+    // اشتراک‌گذاری صفحه
     document.getElementById('shareBtn').addEventListener('click', async () => {
-      const currentUrl = window.location.href;
+      const url = window.location.href;
       if (navigator.share) {
         try {
           await navigator.share({
-            title: 'صفحه اختصاصی پیوندهای مرتضی آبنر',
-            text: 'ارتباط مستقیم با مرتضی آبنر در تمامی شبکه‌های اجتماعی:',
-            url: currentUrl
+            title: 'پیوندهای مرتضی آبنر',
+            url: url
           });
         } catch (err) {
-          copyToClipboard(currentUrl);
+          copyLink(url);
         }
       } else {
-        copyToClipboard(currentUrl);
+        copyLink(url);
       }
     });
 
-    function copyToClipboard(text) {
+    function copyLink(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
-          showToast('لینک صفحه با موفقیت در کلیپ‌بورد کپی شد!');
+          showToast('لینک صفحه کپی شد');
         });
       } else {
-        showToast('آدرس صفحه: ' + text);
+        showToast('لینک: ' + text);
       }
     }
 
-    /* نمایش اعلان Toast */
-    function showToast(message) {
-      const toast = document.getElementById('toastNotice');
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
       const toastMsg = document.getElementById('toastMsg');
-      toastMsg.innerText = message;
-      toast.classList.add('show');
+      toastMsg.innerText = msg;
+      toast.classList.add('active');
       setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
+        toast.classList.remove('active');
+      }, 2500);
     }
 
-    /* مودال بارکد QR */
-    let qrGenerated = false;
-    function toggleQRModal(show) {
-      const modal = document.getElementById('qrModal');
-      if (show) {
-        modal.classList.add('active');
-        if (!qrGenerated && typeof QRCode !== 'undefined') {
-          new QRCode(document.getElementById("qrcode"), {
-            text: window.location.href,
-            width: 170,
-            height: 170,
-            colorDark : "#0f172a",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-          });
-          qrGenerated = true;
-        }
-      } else {
-        modal.classList.remove('active');
-      }
-    }
-
-    document.getElementById('qrBtn').addEventListener('click', () => toggleQRModal(true));
-    document.getElementById('qrModal').addEventListener('click', (e) => {
-      if (e.target.id === 'qrModal') toggleQRModal(false);
-    });
-
-    // راه‌اندازی تم در زمان لود صفحه
-    initializeAutoTheme();
+    setupTheme();
   </script>
 </body>
 </html>
